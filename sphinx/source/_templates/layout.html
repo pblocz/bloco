@@ -1,0 +1,23 @@
+{% extends "!layout.html" %}
+
+{% block extrahead %}
+	{% set css_files = ['_static/override.css'] %}
+	<link rel="stylesheet" href="_static/override.css" type="text/css" />
+	<script type="text/javascript">
+		var oldw = window.onload;
+		window.onload = function(){
+			if(typeof oldw === 'function'){ oldw.apply(window); }
+			var table = document.getElementsByClassName('optable')[0];
+			var rows = table.getElementsByTagName('tr');
+			for(var r=0;r<rows.length;r++){
+				var v = rows[r];
+				var td = v.getElementsByClassName('first')[0];
+				if(td !== undefined && td.getElementsByClassName('element').length){
+					td.className= td.className.replace(/\bfirst\b/g, '');
+				}
+			}
+		}
+	</script>
+
+	{{ super() }}
+{% endblock %}

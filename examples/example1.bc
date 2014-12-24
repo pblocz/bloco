@@ -1,0 +1,5 @@
+int(int,int) : fun = int (int:act,int:sum) {
+	r ((act!=0) ? fun(act-1,sum+act) : sum);
+};
+
+int:a = fun(100,0);

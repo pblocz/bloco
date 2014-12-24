@@ -1,0 +1,120 @@
+0 $accept: program "end of file"
+
+1 program: stmt_list
+
+2 stmt_list: stmt_list stmt
+3          | stmt
+
+4 stmt: expr15 ';'
+5     | declaracion ';'
+6     | def_funcion_cte
+
+7 expr15: expr14 ',' expr15
+8       | expr14 '\'' expr15
+9       | expr14
+
+10 expr14: expr14_1 '=' expr14
+11       | expr14_2 '=' expr14
+12       | expr14_1 '@' funcion_anonima
+13       | expr14_2 '@' funcion_anonima
+14       | expr14_1
+15       | expr14_2
+
+16 expr14_1: expr13 '?' expr14_1
+17         | expr13 '?' expr14_2 ':' expr14_1
+18         | expr13 '?' expr14_2
+
+19 expr14_2: expr13 '?' expr14_2 ':' expr14_2
+20         | expr13
+
+21 expr13: expr13 BARRABARRA expr12
+22       | expr12
+
+23 expr12: expr12 ANDAND expr11
+24       | expr11
+
+25 expr11: expr11 '|' expr10
+26       | expr10
+
+27 expr10: expr10 '^' expr9
+28       | expr9
+
+29 expr9: expr9 '&' expr8
+30      | expr8
+
+31 expr8: expr8 IGUALIGUAL expr7
+32      | expr8 NOIGUAL expr7
+33      | expr7
+
+34 expr7: expr7 MENORIGUAL expr6
+35      | expr7 MAYORIGUAL expr6
+36      | expr7 '<' expr6
+37      | expr7 '>' expr6
+38      | expr6
+
+39 expr6: expr6 MENORMENOR expr5
+40      | expr6 MAYORMAYOR expr5
+41      | expr5
+
+42 expr5: expr5 '+' expr4
+43      | expr5 '-' expr4
+44      | expr4
+
+45 expr4: expr4 '*' expr3
+46      | expr4 '/' expr3
+47      | expr4 '%' expr3
+48      | expr3
+
+49 expr3: MASMAS expr3
+50      | MENOSMENOS expr3
+51      | '-' expr3
+52      | '+' expr3
+53      | '!' expr3
+54      | '~' expr3
+55      | 'r' expr3
+56      | 'c' expr3
+57      | 'b' expr3
+58      | expr1
+
+59 expr1: expr1 MASMAS
+60      | expr1 MENOSMENOS
+61      | expr1 '(' lista_args ')'
+62      | expr1 '[' expr15 ']'
+63      | expr1 '.' "identifier"
+64      | "identifier"
+65      | funcion_anonima
+66      | type '[' expr15 ']'
+67      | "integer"
+68      | '(' expr15 ')'
+
+69 lista_args: %empty
+70           | expr14
+71           | lista_args ',' expr14
+
+72 funcion_anonima: '{' stmt_list '}'
+73                | '(' lista_types_nombre ')' '{' stmt_list '}'
+74                | type '(' lista_types_nombre ')' '{' stmt_list '}'
+75                | type '(' ')' '{' stmt_list '}'
+
+76 declaracion: type ':' "identifier"
+77            | type ':' "identifier" '=' expr14
+78            | declaracion ',' "identifier"
+79            | declaracion ',' "identifier" '=' expr14
+
+80 type: type '[' ']'
+81     | '(' lista_types ')'
+82     | '(' ')'
+83     | type '(' lista_types ')'
+84     | type '(' ')'
+85     | '(' lista_types_nombre ')'
+86     | INT
+
+87 lista_types: type
+88            | lista_types ',' type
+
+89 lista_types_nombre: type ':' "identifier"
+90                   | lista_types_nombre ',' type ':' "identifier"
+
+91 def_funcion_cte: type "identifier" '{' stmt_list '}'
+92                | type "identifier" '(' lista_types_nombre ')' '{' stmt_list '}'
+93                | type "identifier" '(' ')' '{' stmt_list '}'

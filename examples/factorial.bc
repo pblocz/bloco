@@ -1,0 +1,70 @@
+int factorial ( int:a ) {
+	int:r=1;0!=a@{r=r*(a--);};
+}
+
+int arrayrial (int:a) {
+	int[]:b=int[110];
+	int:i=0;
+	i!=a+1@{b[i]=(i==0?1:b[i-1]*i'i--);};
+}
+
+int aux=factorial(5)-arrayrial(4);
+
+/*primera parte: cabeceras de las funciones y definicones de sus structs asociados
+struct mainFrame;
+struct factorialFrame;
+struct anon1Frame;
+struct arrayrialFrame;
+struct anon2Frame;
+
+int main(mainFrame *f);
+int factorial(factorialFrame *f);
+void anon1(anon1Frame *f);
+int arrayrial(arrayrial1Frame *f);
+void anon2(anon2Frame *f);
+
+//segunda parte, implementar todo
+struct mainFrame {
+	int (*factorial)(factorialFrame f);
+	int (*arrayrial)(arrayrialFrame f);
+	int aux;
+};
+
+struct factorialFrame {
+	mainFrame * prev;
+	int a;
+	int r;
+};
+
+struct anon1Frame {factorialFrame *prev;};
+
+struct arrayrialFrame {
+	mainFrame * prev;
+	int a;
+	int* b;
+	int i;
+};
+
+struct anon2Frame {arrayrialFrame *prev;};
+
+int main(mainFrame *f) {
+	f->factorial=factorial;
+	f->arrayrial=factorial;
+	f->aux=(f->factorial)(new factorialFrame(f, 5))-(f->arrayrial(new arrayrialFrame(f, 4));
+}
+
+int factorial(factorialFrame *f) {
+	f->r=1;
+	while(!(0!=f->a)) anon1(new anon1Frame(f));
+}
+void anon1(anon1Frame *f) { f->prev->r=f->prev->r*(a--); }
+
+int arrayrial(arrayrialFrame *f) {
+	f->b=new int[110]; //a la c, pero lo pillas;
+	f->i=0;
+	while(!(i!=f->a)) anon2(new anon2Frame(f));
+}
+void anon2(anon2Frame *f) {f->prev->b[f->prev->i]=...
+	Me he cansado pero seguro que pillas la idea
+
+*/

@@ -1,0 +1,24 @@
+/*asdf*/
+
+#contentwrapper {
+	width:800px;
+	max-width: 800px;
+}
+
+.optable thead th{
+	text-align: center;
+}
+
+.optable tr > td.first{
+	background-color: #f2f2f2;
+	vertical-align: middle;
+	text-align: center;
+	font-weight: bold;
+}
+
+.optable .element{
+	width:30%;
+	display: inline-block;
+/*	margin-left: 3px;
+	margin-right: 3px;*/
+}

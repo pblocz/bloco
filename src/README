@@ -1,0 +1,20 @@
+Para compilar nuestra práctica hacen falta algunas herramientas no estandar:
+
+-gnu make (esta en linux por defecto)
+-Flex  (o equivalente)
+-Bison (u otra implementacion de YACC)
+-clang++ (compilador de C basado en LLVM)
+
+Para compilar la práctica, llamamos a make en el directorio /src:
+ 
+$ make
+
+Y ya se compila todo. El ejecutable se deposita en /src/build/a.out
+Para compilar un programa, se tiene que usar un pipe: 
+
+$ ./a.out <directorio-ejemplo
+Y sale por la salida estandar el resultado del automata, el arbol de sintaxis abstracta y el código.
+El código se puede copiar y pegar en un .c para compilarlo con clang o con gcc.
+
+Bloco no tiene funciones de IO, así que para probar su funcionamiento hay que escribirlas
+manualmente. A fin de cuentas, es un lenguaje experimental.

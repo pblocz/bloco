@@ -1,0 +1,71 @@
+(*
+	Will there be declarations in the language: int foo(int);
+*)
+
+(* Terminal tokens are: *)
+
+IDENTIFIER = ? String from [a-zA-Z][a-zA-Z0-9_]* ? ;
+TYPEIDENTIFIER = ? an IDENTIFIER in the type table ? ;
+INTEGER = ? [+-]\?[0-9]+ ? ;
+FLOAT = ? [+-]\?[0-9]*\.[0-9]+ ? ;
+STRING = ? "([\"]|\\")*" ? ;
+TYPEMODIFIERS = "const" | "register" | "static"
+BASICTYPE = "void" | "int" | "float" | "char" | "bool" ;
+
+
+
+(* Types expression rules, an "expression" that returns a type *)
+
+TypeExpr = TYPEMODIFIERS, TypeExprValue
+
+
+TypeExprValue = TypeName (* Just an IDENTIFIER *)
+	 | TypeExprValue,"[","]" (* Array Types *)
+	 | TypeExprValue,"(",TypeList,")" (* Function type *)
+	 | "(",TypeList,")" (* Tuple without name type *)
+	 | "(",NamedTypeList,")" (* Tuple with name *)
+	 | "(",")" (* Empty tuple *) ;
+
+TypeList = TypeList, "," , TypeExpr | TypeExpr ;
+NamedTypeList = NamedTypeList, ",", NamedType | NamedType ;
+
+NamedType = TypeExpr,":",IDENTIFIER ;
+TypeName = BASICTYPE | TYPEIDENTIFIER ;
+
+
+
+(* Definition expressions, everything that "adds": functions, vars, ... *)
+
+Def = VarDef | NamedFunDef | AnomFunDef ;
+
+VarDef = TypeExpr,":",IDENTIFIER,["=",Expr],[",",IdentList] ;
+IdentList = IDENTIFIER,["=",Expr] | IDENTIFIER,["=",Expr],",",IdentList ;
+
+NamedFunDef = TypeExpr,IDENTIFIER,"(",NamedTypeList,")","{",StmtList,"}" ;
+AnomFunDef = [ TypeExpr [ ,"(",NamedTypeList")" ] ] ,"{",StmtList,"}" ;
+
+
+
+(* Expressions that return a value that can be used *)
+
+ValueExpr = Expr1 ;
+
+Expr1 = Expr1 , '(' , ParameterList , ')' {	  	# Block call
+		__ = FunctionCallNode(_1,_3) }
+	  | Expr1 , '[', ValueExpr ,']' { 		# Array or tuple access (rvalue)
+		__ = IndexNode(_1,_3,lvalue=_1.lvalue) }
+	  | Expr1 , '.' ,  IDENTIFIER {			# Named tuple access (rvalue)
+		__ = NameAccessNode(_1,_3,lvalue=_1.lvalue) }
+	  | Expr1 , ('++' | '--') {			# postfix in/decrement *)
+		__ = PostfixCrementNode(_1,_2) }
+	  | TypeExpr , '[' , ValueExpr , ']' { 	 	# Array creation *)
+		__ = ArrayCreationNode(_1,_3) }
+	  | Expr2 {
+		__ = _1 }
+	  ;
+
+Expr2 = ('++' | '--') , Expr2 				(* Prefix in/decrement *)
+	  | ('+' | '-' ), Expr2 			(* +/- sign operators *)
+	  | '$' , TypeExpr , '$' , Expr2		(* type casting operator *)
+	  | '$' , Expr2					(* typeof operator *)
+	  | Expr3 ;

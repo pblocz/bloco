@@ -157,6 +157,7 @@ La gramática ha sido compilada con bison, la implementación de gnu de YACC. La
 cuestión que generamos es como sigue:
 
 .. literalinclude:: ../../src/parser.output
+	:language: ebnf
 
 Una de nuestras prioridades era minimizar el número de caractéres de código que tendría un programa
 Bloco. Por esto, fué bastante dificil eliminar algunas ambiguedades derivadas de la reutilización
@@ -193,8 +194,8 @@ Anidamiento de ámbitos
 ~~~~~~~~~~~~~~~~~~~~~~
 
 En Bloco se considera que todo el código es una función, main, que no tiene cabecera.
-Debido a que los bucles y bifurcaciones reciben funciones anónimas,  Bloco sólo genera ámbitos 
-en una circunstancia: cuando se define una función. 
+Debido a que los bucles y bifurcaciones reciben funciones anónimas,  Bloco sólo genera ámbitos
+en una circunstancia: cuando se define una función.
 
 Los ámbitos entonces se pueden definir con una función anónima o con una función normal. En ambos
 casos se sigue un procedimiento muy similar al proceso por el cual se identifican en pascal. Los
@@ -267,7 +268,7 @@ La característica principal de bloco son las funciones de primer order. C no ti
 Cuando una función es declarada, por ejemplo:
 
 .. code-block:: c++
-	  
+
 	  int: c = 5;
 	  int(int): fun = int (int: a) { r 2*a*c; };
 	  r fun;
@@ -339,9 +340,9 @@ Además cada función tendrá un epílogo que consiste en:
 Así el epílogo se parecerá a:
 
 .. code-block:: c
-	  
+
 	  void * frame = malloc(N); // Allocate frame
-	  *(void**)frame=_frame; // Save parent frame 
+	  *(void**)frame=_frame; // Save parent frame
 	  ((type_arg1*)(((char*) frame) + M1))[0] = arg1; // Copy first parameter
 	  ((type_arg2*)(((char*) frame) + M2))[0] = arg2; // Copy second parameter
 
@@ -366,14 +367,14 @@ Para ello definimos un tipo común para todas las funciones anónimas:
 Entonces, por ejemplo, la traducción de este bloque de código:
 
 .. code-block:: c++
-   
+
 	  int: c=5;
 	  int(int): fun = int (int: a) { r 2*a*c; };
-	  
+
 Se parecerá a:
 
 .. code-block:: c
-	  
+
 	  int __anon_1 (void* _frame, int a) {
 	  	// Function prologue to create frame
 		return 2*A*C;
@@ -394,7 +395,7 @@ Llamada a funciones
 
 En este punto llamar a la función consistiría en acceder al miembro
 *.code*, hacer el casting al tipo *punter-a-función* correcto y
-llamarlo usando *.frame* y el resto de parámetros. 
+llamarlo usando *.frame* y el resto de parámetros.
 
 El problema es que el resultado tiene que ser una expresión para poder
 usar su valor de retorno como parte de otras expresiones, con lo que necesitamos hacer el anterior proceso en un sólo paso. La solución que hemos adoptado es genearar funciones auxiliares que realicen esto.
@@ -402,7 +403,7 @@ usar su valor de retorno como parte de otras expresiones, con lo que necesitamos
 Por ejemplo, la traducción del código:
 
 .. code-block:: c++
-	  
+
 	  ((int: a) { c = 2*a; })(5); // c is already defined
 
 
@@ -410,7 +411,7 @@ Serían 2 funciones, *__anon_1* and *__aux_1*, la creación de un objeto
 de tipo *anon_t* y la llamada a *__aux_1*. El resultado es:
 
 .. code-block:: c
-	  
+
 	void __anon_1 (void* _frame, int a) {
 		// Prologue of function
 		C = 2 * A;
@@ -437,7 +438,7 @@ por qué eran (o no) buenas ideas de diseño.
 
 Pese a que el lenguaje no es perfecto, y genera algo de basura, estamos muy satisfechos con el
 resultado.
- 
+
 Bibliografía
 ============
 
